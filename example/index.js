@@ -1,39 +1,28 @@
-const { ServerCore, UiCore } = require("../dist/index.js");
-
-function generateHexColor() {
-    return "#" + Math.floor(Math.random() * 16777215).toString(16);
-}
-
-function todoItem(name) {
-    return `
-        <li style="color: ${generateHexColor()}">
-            ${name}
-        </li>
-    `;
-}
-
-function todoList(someTodos) {
-    const todos = someTodos ?? [
-        "Learn TypeScript",
-        "Learn JavaScript",
-        "Learn React",
-        "Learn Angular",
-        "Learn Vue",
-    ];
-    return `
-        <ul>
-            ${todos.map((todo) => todoItem(todo)).join("")}
-        </ul>
-    `;
-}
+const { ServerCore, UiCore, PageConfig } = require("../dist/index.js");
+const { todoList } = require("./components.js");
 
 const main = new UiCore(
     () => `
+        <h1>Welcome to my beautiful site</h1>
+        <p>Pages: </p>
+        <ul>
+            <li><a href="/home">Home</a></li>
+        </ul>
+    `,
+    new PageConfig(undefined, "Main")
+);
+
+const home = new UiCore(
+    () => `
         <h1>Some nice website</h1>
         ${todoList()}
-    `
+        <hr>
+        <p>${new Date()}</p>
+    `,
+    new PageConfig(undefined, "Home")
 );
 
 const server = new ServerCore();
-server.registerRoute("/home", main);
+server.registerRoute("/", main);
+server.registerRoute("/home", home);
 server.serve(8080);
