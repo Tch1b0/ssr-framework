@@ -12,19 +12,11 @@ export class ServerCore {
     serve(port: number) {
         const app: Express = express();
 
-        app.get("/:route", (req, res) => {
+        app.get("/:route?", (req, res) => {
             const route = req.params.route;
-            console.log(route);
-            const ui = this.routes.get("/" + route);
-            console.log(this.routes);
+            const ui = this.routes.get("/" + (route ?? ""));
 
-            if (ui) {
-                const html = `<!DOCTYPE html>
-                <html> <head> <title>${route}</title> </head> <body> ${ui.plainRender()} </body> </html>`;
-                res.send(html);
-            } else {
-                res.status(404).send("Not found");
-            }
+            ui ? res.send(ui.plainRender()) : res.status(404).send("Not found");
         });
 
         app.listen(port, () => {
