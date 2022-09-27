@@ -1,4 +1,3 @@
-import { EventEmitter } from "node:events";
 import { UiComponent } from ".";
 import { PageConfig } from "./pageconfig";
 
